@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--写sql语句-->
+<mapper namespace="com.tl.mapper.TUserMapper">
+
+	<sql id="selector">
+		select * from sys_user
+	</sql>
+
+	<!-- 查询用户名和密码 -->
+	<select id="selectByNameAndPass" resultType="com.tl.pojo.TUser" parameterType="com.tl.pojo.TUser">
+		<include refid="selector"/>
+		where user_code= #{userCode} and user_password= #{userPwd}
+		<!-- select count(*) from t_user where usercode= #{userCode} and userpwd= #{userPwd} -->
+	</select>
+
+	<!--查询用户的全部信息-->
+	<select id="selectCustomerListByQueryVo" parameterType="QueryVo" resultType="TUser">
+		<include refid="selector"/>
+		<where>
+			<if test="usercode !=null and usercode != ''">
+				user_code = #{user_code}
+			</if>
+			<if test="username !=null and username != ''">
+				and user_name like "%"#{user_name}"%"
+			</if>
+		</where>
+	</select>
+	<!--查询总条数-->
+	<select id="selectCountByQueryVo" parameterType="QueryVo" resultType="Long">
+		select count(1) from sys_user
+		<where>
+			<if test="user_code !=null and user_code != ''">
+				usercode = #{usercode}
+			</if>
+			<if test="user_name !=null and user_name != ''">
+				and username like "%"#{username}"%"
+			</if>
+		</where>
+	</select>
+
+</mapper>
